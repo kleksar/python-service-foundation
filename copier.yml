@@ -1,5 +1,10 @@
 _min_copier_version: "9.18.1"
 _subdirectory: template
+_exclude:
+  - "{{ 'alembic/**' if not use_postgres else '__copier_keep__' }}"
+  - "{{ 'alembic.ini.jinja' if not use_postgres else '__copier_keep__' }}"
+  - "{{ 'env/postgres.example.jinja' if not use_postgres else '__copier_keep__' }}"
+  - "{{ 'src/**/database.py.jinja' if not use_postgres else '__copier_keep__' }}"
 
 project_name:
   type: str
