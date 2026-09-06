@@ -4,6 +4,9 @@ set -euo pipefail
 
 repo_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 scratch_dir="$(mktemp -d)"
+template_source="$scratch_dir/template-source"
+mkdir -p "$template_source"
+git -C "$repo_root" archive --format=tar HEAD | tar -xf - -C "$template_source"
 trap 'rm -rf "$scratch_dir"' EXIT
 
 render_and_check() {
@@ -11,11 +14,11 @@ render_and_check() {
   local use_postgres="$2"
   local destination="$scratch_dir/$profile"
 
-  uvx --from copier==9.18.1 copier copy --defaults --trust --vcs-ref=HEAD \
+  uvx --from copier==9.18.1 copier copy --defaults --trust \
     --data project_name="$profile service" \
     --data project_slug="${profile}_service" \
     --data use_postgres="$use_postgres" \
-    "$repo_root" "$destination"
+    "$template_source" "$destination"
 
   (
     cd "$destination"
