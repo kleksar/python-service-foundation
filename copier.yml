@@ -1,0 +1,12 @@
+_min_copier_version: "9.18.1"
+_subdirectory: template
+
+project_name:
+  type: str
+  help: Human-readable name for the new service.
+  default: "{{ _copier_conf.dst_path.name }}"
+
+project_slug:
+  type: str
+  help: Filesystem-safe identifier for the new service.
+  default: "{{ project_name | lower | replace(' ', '-') | replace('_', '-') }}"
