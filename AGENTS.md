@@ -1,3 +1,3 @@
 # Agent entrypoint
 
-Before making changes, read and follow [knowledge/governance/agent-entrypoint.md](knowledge/governance/agent-entrypoint.md).
+Before repository work, read [the development entrypoint](knowledge/governance/agent-entrypoint.md). It routes tasks to the relevant canonical knowledge; do not load the entire corpus by default.
