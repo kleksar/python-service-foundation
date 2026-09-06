@@ -1,0 +1,26 @@
+"""Liveness and dependency-aware readiness endpoints."""
+
+from fastapi import APIRouter, HTTPException, status
+
+{% if use_postgres %}from .database import database_is_ready
+{% endif %}router = APIRouter(prefix="/health", tags=["health"])
+
+
+@router.get("/live")
+async def live() -> dict[str, str]:
+    """Report process liveness without checking dependencies."""
+
+    return {"status": "live"}
+
+
+@router.get("/ready")
+async def ready() -> dict[str, str]:
+    """Report readiness after checking enabled infrastructure dependencies."""
+{% if use_postgres %}
+    if not await database_is_ready():
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail="database unavailable",
+        )
+{% endif %}
+    return {"status": "ready"}

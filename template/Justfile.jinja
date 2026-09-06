@@ -1,0 +1,34 @@
+bootstrap:
+    uv sync --all-groups
+
+check:
+    uv run ruff check .
+    uv run ruff format --check .
+    uv run pyright
+
+test:
+    uv run pytest
+
+up:
+    docker compose up --build -d
+
+down:
+    docker compose down
+
+logs:
+    docker compose logs -f
+{% if use_postgres %}
+migrate:
+    uv run alembic upgrade head
+
+migration name:
+    uv run alembic revision --autogenerate -m "{{name}}"
+{% else %}
+migrate:
+    @echo "PostgreSQL is disabled for this project."
+    exit 1
+
+migration name:
+    @echo "PostgreSQL is disabled for this project."
+    exit 1
+{% endif %}

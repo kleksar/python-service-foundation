@@ -8,5 +8,11 @@ project_name:
 
 project_slug:
   type: str
-  help: Filesystem-safe identifier for the new service.
-  default: "{{ project_name | lower | replace(' ', '-') | replace('_', '-') }}"
+  help: Python package identifier for the new service (lowercase letters, digits, underscores).
+  default: "{{ project_name | lower | replace(' ', '_') | replace('-', '_') }}"
+  validator: "{% if not project_slug.isidentifier() or not project_slug.islower() %}Use a lowercase Python identifier with letters, digits, and underscores.{% endif %}"
+
+use_postgres:
+  type: bool
+  help: Include the first-party async PostgreSQL profile (SQLAlchemy, asyncpg, and Alembic).
+  default: true

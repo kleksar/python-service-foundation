@@ -1,0 +1,33 @@
+from fastapi.testclient import TestClient
+
+from {{ project_slug }}.main import app
+{% if use_postgres %}from {{ project_slug }} import health
+{% endif %}
+
+
+def test_liveness_is_always_available() -> None:
+    with TestClient(app) as client:
+        response = client.get("/health/live")
+
+    assert response.status_code == 200
+    assert response.json() == {"status": "live"}
+
+{% if use_postgres %}
+def test_readiness_passes_when_database_dependency_is_available(monkeypatch) -> None:
+    async def available() -> bool:
+        return True
+
+    monkeypatch.setattr(health, "database_is_ready", available)
+    with TestClient(app) as client:
+        response = client.get("/health/ready")
+
+    assert response.status_code == 200
+    assert response.json() == {"status": "ready"}
+{% else %}
+def test_readiness_passes_without_optional_dependencies() -> None:
+    with TestClient(app) as client:
+        response = client.get("/health/ready")
+
+    assert response.status_code == 200
+    assert response.json() == {"status": "ready"}
+{% endif %}
