@@ -89,4 +89,4 @@ def test_database_readiness_does_not_hide_cancellation(monkeypatch: pytest.Monke
 
     with pytest.raises(asyncio.CancelledError):
         asyncio.run(database.database_is_ready())
-{% endif %}
+{% endif -%}
