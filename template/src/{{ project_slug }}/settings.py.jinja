@@ -19,7 +19,6 @@ class Settings(BaseSettings):
     database_url: str = "postgresql+asyncpg://app:app@localhost:5432/app"
 {% endif %}
 
-
 @lru_cache
 def get_settings() -> Settings:
     """Return one validated settings instance per process."""

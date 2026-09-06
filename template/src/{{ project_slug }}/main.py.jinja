@@ -24,7 +24,6 @@ async def lifespan(_: FastAPI) -> AsyncIterator[None]:
 {% if use_postgres %}    await dispose_engine()
 {% endif %}
 
-
 def create_app() -> FastAPI:
     """Build the intentionally small HTTP service."""
 

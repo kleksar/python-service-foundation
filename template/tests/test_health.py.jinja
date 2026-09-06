@@ -30,4 +30,4 @@ def test_readiness_passes_without_optional_dependencies() -> None:
 
     assert response.status_code == 200
     assert response.json() == {"status": "ready"}
-{% endif %}
+{% endif -%}
