@@ -23,11 +23,14 @@ render_and_check() {
   (
     cd "$destination"
     uv sync --all-groups
+    "$repo_root/scripts/assert-rendered-profile.sh" \
+      "$destination" "$use_postgres" "${profile}_service"
     uv run ruff check .
     uv run ruff format --check .
     uv run pyright
     uv run pytest
     if [[ "$use_postgres" == "true" ]]; then
+      uv run alembic heads
       uv run alembic upgrade head --sql >/dev/null
     fi
     if command -v docker >/dev/null 2>&1 && docker compose version >/dev/null 2>&1; then
@@ -37,5 +40,5 @@ render_and_check() {
 }
 
 render_and_check postgres true
-render_and_check no_postgres false
+render_and_check minimal false
 printf 'Copier profile smoke validation passed.\n'

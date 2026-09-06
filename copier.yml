@@ -1,7 +1,6 @@
 _min_copier_version: "9.18.1"
 _subdirectory: template
 _exclude:
-  - "{{ 'alembic/**' if not use_postgres else '__copier_keep__' }}"
   - "{{ 'alembic.ini' if not use_postgres else '__copier_keep__' }}"
   - "{{ 'env/postgres.example' if not use_postgres else '__copier_keep__' }}"
   - "{{ 'src/**/database.py' if not use_postgres else '__copier_keep__' }}"
