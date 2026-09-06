@@ -1,9 +1,10 @@
 """Liveness and dependency-aware readiness endpoints."""
 
-from fastapi import APIRouter, HTTPException, status
+from fastapi import APIRouter{% if use_postgres %}, HTTPException, status{% endif %}
 {% if use_postgres %}
 from .database import database_is_ready
-{% endif %}
+
+{% endif -%}
 router = APIRouter(prefix="/health", tags=["health"])
 
 
