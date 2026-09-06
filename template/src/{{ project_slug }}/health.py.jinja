@@ -1,6 +1,6 @@
 """Liveness and dependency-aware readiness endpoints."""
 
-from fastapi import APIRouter{% if use_postgres %}, HTTPException, status{% endif %}
+from fastapi import APIRouter{% if use_postgres %}, HTTPException, status{% endif %}{% if not use_postgres %}{{ "\n" }}{% endif %}
 {% if use_postgres %}
 from .database import database_is_ready
 
