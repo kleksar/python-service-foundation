@@ -27,6 +27,9 @@ render_and_check() {
     uv run ruff format --check .
     uv run pyright
     uv run pytest
+    if [[ "$use_postgres" == "true" ]]; then
+      uv run alembic upgrade head --sql >/dev/null
+    fi
     if command -v docker >/dev/null 2>&1 && docker compose version >/dev/null 2>&1; then
       docker compose -f compose.yaml config >/dev/null
     fi
