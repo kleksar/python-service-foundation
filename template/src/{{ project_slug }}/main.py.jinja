@@ -7,8 +7,7 @@ from contextlib import asynccontextmanager
 import uvicorn
 from fastapi import FastAPI
 
-{% if use_postgres %}
-from .database import dispose_engine
+{% if use_postgres %}from .database import dispose_engine
 {% endif -%}
 from .health import router as health_router
 from .logging_config import configure_logging
@@ -22,8 +21,7 @@ async def lifespan(_: FastAPI) -> AsyncIterator[None]:
     """Own resources that need deterministic process shutdown."""
 
     yield
-{% if use_postgres -%}
-    await dispose_engine()
+{% if use_postgres %}    await dispose_engine()
 {% endif %}
 
 
