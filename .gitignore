@@ -5,6 +5,7 @@ __pycache__/
 .pytest_cache/
 .ruff_cache/
 .mypy_cache/
+.pyrefly_cache/
 .pytype/
 
 # Virtual environments and packaging
@@ -27,3 +28,5 @@ htmlcov/
 .DS_Store
 .idea/
 .vscode/
+*.iml
+.claude/worktrees/
