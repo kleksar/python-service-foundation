@@ -23,7 +23,7 @@ Use `just down` to stop the local stack and `just logs` to follow it. With the P
 
 ## Container
 
-`Dockerfile` is a multi-stage Python 3.13 image that runs as a non-root user. `compose.yaml` is a local development stack, not a deployment manifest.
+`Dockerfile` is a multi-stage Python 3.13 image that runs as a non-root user through `python -m {{ project_slug }}.main`, the same module entrypoint used by the generated `{{ project_slug }}` command. This keeps Uvicorn and application logs on the canonical JSON formatter. `compose.yaml` is a local development stack, not a deployment manifest.
 
 ## Generated commands
 

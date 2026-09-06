@@ -78,6 +78,31 @@ wait_for_status() {
   return 1
 }
 
+assert_app_logs_are_json() {
+  docker compose -p "$project_name" -f "$destination/compose.yaml" \
+    logs --no-color --no-log-prefix app | python3 -c '
+import json
+import sys
+
+required_fields = {"timestamp", "level", "logger", "message"}
+lines = [line for line in sys.stdin.read().splitlines() if line.strip()]
+if not lines:
+    raise SystemExit("Expected the app container to emit logs.")
+for line in lines:
+    try:
+        record = json.loads(line)
+    except json.JSONDecodeError as error:
+        raise SystemExit(f"Non-JSON app log line: {line!r}: {error}") from error
+    if not isinstance(record, dict):
+        raise SystemExit(f"App log record is not an object: {line!r}")
+    missing = required_fields - record.keys()
+    if missing:
+        raise SystemExit(f"App log record misses {sorted(missing)!r}: {line!r}")
+    if any(not isinstance(record[field], str) or not record[field] for field in required_fields):
+        raise SystemExit(f"App log record has invalid required fields: {line!r}")
+'
+}
+
 docker compose -p "$project_name" -f "$destination/compose.yaml" up --build --detach
 wait_for_status /health/ready 200
 docker compose -p "$project_name" -f "$destination/compose.yaml" stop postgres
@@ -85,4 +110,6 @@ wait_for_status /health/ready 503
 [[ "$(status_code /health/live)" == 200 ]]
 docker compose -p "$project_name" -f "$destination/compose.yaml" start postgres
 wait_for_status /health/ready 200
+status_code /health/live >/dev/null
+assert_app_logs_are_json
 printf 'Compose readiness outage/recovery acceptance passed.\n'

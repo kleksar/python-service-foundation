@@ -43,3 +43,7 @@ def run() -> None:
 
     settings = get_settings()
     uvicorn.run(app, host=settings.host, port=settings.port, log_config=None)
+
+
+if __name__ == "__main__":
+    run()
