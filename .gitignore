@@ -11,7 +11,8 @@ __pycache__/
 # Virtual environments and packaging
 .venv/
 venv/
-env/
+env/*
+!env/*.env.example
 *.egg-info/
 build/
 dist/
