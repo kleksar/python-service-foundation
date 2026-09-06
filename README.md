@@ -21,6 +21,7 @@ Choose a lowercase Python package identifier for `project_slug`. Copier defaults
 ```bash
 scripts/smoke-template.sh
 scripts/validate-copier-metadata.sh HEAD
+scripts/compose-readiness-outage.sh
 ```
 
-The smoke script renders both profiles, installs each generated project, runs Ruff, Pyright, and pytest, and validates Compose configuration when Docker Compose is available. It does not require secrets or a running database.
+The smoke script renders both profiles, installs each generated project, runs Ruff, Pyright, and pytest, and validates Compose configuration when Docker Compose is available. It does not require secrets or a running database. `compose-readiness-outage.sh` is an opt-in Docker acceptance that renders the PostgreSQL profile, stops its Compose PostgreSQL service, verifies readiness becomes `503` while liveness stays `200`, then verifies readiness recovers. It allocates temporary host ports, so an unrelated service using the default ports is not treated as a template defect.
