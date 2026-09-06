@@ -9,7 +9,7 @@ from fastapi import FastAPI
 
 {% if use_postgres %}
 from .database import dispose_engine
-{% endif %}
+{% endif -%}
 from .health import router as health_router
 from .logging_config import configure_logging
 from .settings import get_settings
@@ -22,7 +22,7 @@ async def lifespan(_: FastAPI) -> AsyncIterator[None]:
     """Own resources that need deterministic process shutdown."""
 
     yield
-{% if use_postgres %}
+{% if use_postgres -%}
     await dispose_engine()
 {% endif %}
 
