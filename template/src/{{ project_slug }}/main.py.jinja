@@ -7,11 +7,12 @@ from contextlib import asynccontextmanager
 import uvicorn
 from fastapi import FastAPI
 
+{% if use_postgres %}
+from .database import dispose_engine
+{% endif %}
 from .health import router as health_router
 from .logging_config import configure_logging
 from .settings import get_settings
-{% if use_postgres %}from .database import dispose_engine
-{% endif %}
 
 logger = logging.getLogger(__name__)
 
