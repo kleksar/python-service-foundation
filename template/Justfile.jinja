@@ -22,7 +22,7 @@ migrate:
     uv run alembic upgrade head
 
 migration name:
-    uv run alembic revision --autogenerate -m "{{name}}"
+    uv run alembic revision --autogenerate -m "{{ "{{name}}" }}"
 {% else %}
 migrate:
     @echo "PostgreSQL is disabled for this project."

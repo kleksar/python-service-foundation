@@ -11,7 +11,7 @@ render_and_check() {
   local use_postgres="$2"
   local destination="$scratch_dir/$profile"
 
-  uvx --from copier==9.18.1 copier copy --defaults --trust \
+  uvx --from copier==9.18.1 copier copy --defaults --trust --vcs-ref=HEAD \
     --data project_name="$profile service" \
     --data project_slug="${profile}_service" \
     --data use_postgres="$use_postgres" \
