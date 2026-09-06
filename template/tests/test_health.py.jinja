@@ -23,6 +23,18 @@ def test_readiness_passes_when_database_dependency_is_available(monkeypatch) -> 
 
     assert response.status_code == 200
     assert response.json() == {"status": "ready"}
+
+
+def test_readiness_returns_service_unavailable_when_database_is_down(monkeypatch) -> None:
+    async def unavailable() -> bool:
+        return False
+
+    monkeypatch.setattr(health, "database_is_ready", unavailable)
+    with TestClient(app) as client:
+        response = client.get("/health/ready")
+
+    assert response.status_code == 503
+    assert response.json() == {"detail": "database unavailable"}
 {% else %}
 def test_readiness_passes_without_optional_dependencies() -> None:
     with TestClient(app) as client:

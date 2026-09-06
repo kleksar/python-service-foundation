@@ -20,6 +20,8 @@ require_command() {
 }
 require_command docker
 require_command curl
+require_command python3
+require_command uvx
 docker compose version >/dev/null
 
 mkdir -p "$template_source"
@@ -39,8 +41,17 @@ with socket.socket() as sock:
     print(sock.getsockname()[1])
 PY
 }
-app_port="$(allocate_port)"
-postgres_port="$(allocate_port)"
+app_port="${READINESS_APP_HOST_PORT:-$(allocate_port)}"
+postgres_port="${READINESS_POSTGRES_HOST_PORT:-$(allocate_port)}"
+if [[ ! "$app_port" =~ ^[0-9]+$ || ! "$postgres_port" =~ ^[0-9]+$ ]] || \
+  (( app_port < 1 || app_port > 65535 || postgres_port < 1 || postgres_port > 65535 )); then
+  printf 'READINESS_APP_HOST_PORT and READINESS_POSTGRES_HOST_PORT must be valid ports.\n' >&2
+  exit 2
+fi
+if [[ "$app_port" == "$postgres_port" ]]; then
+  printf 'READINESS_APP_HOST_PORT and READINESS_POSTGRES_HOST_PORT must differ.\n' >&2
+  exit 2
+fi
 python3 - "$destination/compose.yaml" "$app_port" "$postgres_port" <<'PY'
 from pathlib import Path
 import sys
